@@ -72,6 +72,11 @@ const variantSchema = new mongoose.Schema({
 });
 
 const productSchema = new mongoose.Schema({
+    sellerId: {
+        type: mongoose.Schema.Types.ObjectId,
+        ref: "User",
+        required: [true, "Product seller ID is required"]
+    },
     title: {
         type: String,
         required: [true, "Product title is required"],
