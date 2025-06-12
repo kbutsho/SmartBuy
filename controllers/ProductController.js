@@ -28,3 +28,17 @@ export const createProduct = async (req) => {
         return handleError(error);
     }
 }
+
+export const getAllProducts = async () => {
+    await connectDB();
+    try {
+        const products = await Product.find()
+        return NextResponse.json({
+            success: true,
+            message: 'Products fetched successfully',
+            products,
+        }, { status: 200 });
+    } catch (error) {
+        return handleError(error);
+    }
+}
