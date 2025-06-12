@@ -47,16 +47,21 @@ const productSchema = new mongoose.Schema({
         required: [true, "Product description is required"],
         trim: true
     },
-    category: {
+    brand: {
         type: mongoose.Schema.Types.ObjectId,
-        ref: "Category",
-        required: [true, "Product category is required"]
+        ref: "Brand",
+        required: [true, "Product Brand is required"]
     },
     rating: {
         type: Number,
         default: 0,
         min: [0, "Rating cannot be negative"],
         max: [5, "Rating cannot exceed 5"]
+    },
+    ratingsCount: {
+        type: Number,
+        default: 0,
+        min: [0, "Ratings count cannot be negative"]
     },
     stock: {
         type: Number,
@@ -80,10 +85,30 @@ const productSchema = new mongoose.Schema({
     }],
     status: {
         type: String,
-        enum: ["in-stock", "out-of-stock", "archived"],
+        enum: ["in-stock", "out-of-stock", "up-coming", "archived"],
         default: "active",
         required: [true, "Product status is required"]
     },
+    specifications: [{
+        key: {
+            type: String,
+            required: [true, "Specification name is required"]
+        },
+        value: {
+            type: String,
+            required: [true, "Specification value is required"]
+        }
+    }],
+    specifications: [{
+        key: {
+            type: String,
+            required: [true, "Specification name is required"]
+        },
+        value: {
+            type: String,
+            required: [true, "Specification value is required"]
+        }
+    }],
     reviews: [reviewSchema]
 }, {
     timestamps: true
