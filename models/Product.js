@@ -21,15 +21,16 @@ const reviewSchema = new mongoose.Schema({
     timestamps: true
 });
 
-const productSchema = new mongoose.Schema({
-    title: {
+const variantSchema = new mongoose.Schema({
+    type: {
         type: String,
-        required: [true, "Product title is required"],
-        trim: true
+        enum: ["UNOFFICIAL", "OFFICIAL", "USED"],
+        default: "UNOFFICIAL",
+        required: [true, "Product type is required"]
     },
     price: {
         type: Number,
-        required: [true, "Product price is required"],
+        required: [true, "Price is required"],
         min: [0, "Price cannot be negative"]
     },
     discountPrice: {
@@ -41,6 +42,41 @@ const productSchema = new mongoose.Schema({
             },
             message: "Discount price cannot exceed original price"
         }
+    },
+    colour: {
+        type: String,
+        required: [true, "Variant color is required"],
+        trim: true
+    },
+    storage: {
+        type: String,
+        required: [true, "Variant storage is required"],
+        trim: true
+    },
+    stock: {
+        type: Number,
+        required: [true, "Product stock is required"],
+        min: [0, "Stock cannot be negative"]
+    },
+    region: {
+        type: String,
+        required: [true, "Variant region is required"],
+        trim: true
+    },
+    status: {
+        type: String,
+        enum: ["AVAILABLE", "STOCK OUT", "UPCOMING", "ARCHIVED"],
+        default: "AVAILABLE",
+        required: [true, "Product status is required"]
+    }
+});
+
+const productSchema = new mongoose.Schema({
+    title: {
+        type: String,
+        required: [true, "Product title is required"],
+        trim: true,
+        unique: true
     },
     description: {
         type: String,
@@ -63,50 +99,50 @@ const productSchema = new mongoose.Schema({
         default: 0,
         min: [0, "Ratings count cannot be negative"]
     },
-    stock: {
-        type: Number,
-        required: [true, "Product stock is required"],
-        min: [0, "Stock cannot be negative"]
-    },
-    tags: [{
-        type: String,
-        trim: true,
-        required: [true, "Product tags are required"]
-    }],
     thumbnail: {
         type: String,
-        required: [true, "Product image URL is required"],
+        required: [true, "Product thumbnail URL is required"],
         trim: true
     },
-    images: [{
-        type: String,
+    images: {
+        type: [String],
         required: [true, "Product images URLs are required"],
-        trim: true
-    }],
-    status: {
-        type: String,
-        enum: ["in-stock", "out-of-stock", "up-coming", "archived"],
-        default: "active",
-        required: [true, "Product status is required"]
-    },
-    specifications: [{
-        key: {
-            type: String,
-            required: [true, "Specification name is required"]
-        },
-        value: {
-            type: String,
-            required: [true, "Specification value is required"]
+        validate: {
+            validator: function (v) {
+                return v.length >= 3 && v.length <= 5;
+            },
+            message: props => {
+                if (props.value.length === 0) {
+                    return "Product images URLs are required";
+                }
+                if (props.value.length < 3) {
+                    return `At least 3 images are required`;
+                }
+                if (props.value.length > 5) {
+                    return `No more than 5 images allowed`;
+                }
+                return 'Invalid number of images';
+            }
         }
-    }],
-    specifications: [{
+    },
+    variants: {
+        type: [variantSchema],
+        required: [true, "At least one product variant is required"],
+        validate: {
+            validator: function (v) {
+                return v.length > 0;
+            },
+            message: "At least one variant must be provided"
+        }
+    },
+    others: [{
         key: {
             type: String,
-            required: [true, "Specification name is required"]
+            required: [true, "others Specification name is required"]
         },
         value: {
             type: String,
-            required: [true, "Specification value is required"]
+            required: [true, "others Specification value is required"]
         }
     }],
     reviews: [reviewSchema]
