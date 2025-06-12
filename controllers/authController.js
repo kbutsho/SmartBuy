@@ -12,7 +12,10 @@ export const registration = async (req) => {
         if (existingUser) {
             return NextResponse.json({
                 success: false,
-                message: 'Email already exists',
+                message: 'registration failed',
+                error: {
+                    "email": "Email already exists"
+                }
             }, { status: 400 });
         }
         const newUser = new User(data);
