@@ -2,6 +2,7 @@ import connectDB from "@/lib/mongodb";
 import Product from "@/models/Product";
 import { handleError } from "@/utils/errorHandler";
 import { NextResponse } from "next/server";
+import "@/models/Brand";
 
 export const createProduct = async (req) => {
     await connectDB();
@@ -32,7 +33,7 @@ export const createProduct = async (req) => {
 export const getAllProducts = async () => {
     await connectDB();
     try {
-        const products = await Product.find()
+        const products = await Product.find().populate('brand', 'name')
         return NextResponse.json({
             success: true,
             message: 'Products fetched successfully',
