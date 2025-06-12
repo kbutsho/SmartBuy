@@ -25,18 +25,6 @@ export function handleError(error) {
 
     // CastError (invalid ObjectId, etc.)
     if (error.name === 'CastError') {
-        // For ObjectId errors, customize the message
-        if (error.kind === 'ObjectId') {
-            const errors = {};
-            errors[error.path] = `Invalid ObjectId value: "${error.value}"`;
-            return NextResponse.json({
-                success: false,
-                message: 'Invalid ObjectId',
-                errors,
-            }, { status: 400 });
-        }
-
-        // Other CastError fallback
         return NextResponse.json({
             success: false,
             message: `Invalid ${error.path}: "${error.value}"`,
