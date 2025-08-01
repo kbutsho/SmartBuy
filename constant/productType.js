@@ -1,5 +1,5 @@
 export const ProductType = {
-    UNOFFICIAL: "UNOFFICIAL",
-    OFFICIAL: "OFFICIAL",
-    USED: "USED"
+    UNOFFICIAL: "unofficial",
+    OFFICIAL: "official",
+    USED: "used"
 }

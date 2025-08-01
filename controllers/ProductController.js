@@ -8,16 +8,6 @@ export const createProduct = async (req) => {
     await connectDB();
     try {
         const data = await req.json();
-        const isExist = await Product.findOne({ title: data.title });
-        if (isExist) {
-            return NextResponse.json({
-                success: false,
-                message: 'Product not created',
-                error: {
-                    "name": "Product with this title already exists"
-                }
-            }, { status: 400 });
-        }
         const newProduct = new Product(data);
         await newProduct.save();
         return NextResponse.json({

@@ -1,6 +1,6 @@
 export const ProductStatus = {
-    AVAILABLE: "AVAILABLE",
-    STOCK_OUT: "STOCK OUT",
-    UPCOMING: "UPCOMING",
-    ARCHIVED: "ARCHIVED"
+    AVAILABLE: "available",
+    STOCK_OUT: "stock out",
+    UPCOMING: "upcoming",
+    ARCHIVED: "archived"
 };
