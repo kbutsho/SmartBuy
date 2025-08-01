@@ -1,3 +1,5 @@
+import { ProductStatus } from "@/constant/productStatus";
+import { ProductType } from "@/constant/productType";
 import mongoose from "mongoose";
 
 const reviewSchema = new mongoose.Schema({
@@ -24,8 +26,8 @@ const reviewSchema = new mongoose.Schema({
 const variantSchema = new mongoose.Schema({
     type: {
         type: String,
-        enum: ["UNOFFICIAL", "OFFICIAL", "USED"],
-        default: "UNOFFICIAL",
+        enum: Object.values(ProductType),
+        default: ProductType.UNOFFICIAL,
         required: [true, "Product type is required"]
     },
     price: {
@@ -65,8 +67,8 @@ const variantSchema = new mongoose.Schema({
     },
     status: {
         type: String,
-        enum: ["AVAILABLE", "STOCK OUT", "UPCOMING", "ARCHIVED"],
-        default: "AVAILABLE",
+        enum: Object.values(ProductStatus),
+        default: ProductStatus.AVAILABLE,
         required: [true, "Product status is required"]
     }
 });
@@ -75,7 +77,7 @@ const productSchema = new mongoose.Schema({
     sellerId: {
         type: mongoose.Schema.Types.ObjectId,
         ref: "User",
-        required: [true, "Product seller ID is required"]
+        required: [true, "Seller ID is required"]
     },
     title: {
         type: String,
@@ -106,27 +108,21 @@ const productSchema = new mongoose.Schema({
     },
     thumbnail: {
         type: String,
-        required: [true, "Product thumbnail URL is required"],
+        required: [true, "Product thumbnail is required"],
         trim: true
     },
     images: {
         type: [String],
-        required: [true, "Product images URLs are required"],
+        required: [true, "Product images are required"],
         validate: {
             validator: function (v) {
-                return v.length >= 3 && v.length <= 5;
+                return v.length >= 2 && v.length <= 5;
             },
             message: props => {
-                if (props.value.length === 0) {
-                    return "Product images URLs are required";
-                }
-                if (props.value.length < 3) {
-                    return `At least 3 images are required`;
-                }
-                if (props.value.length > 5) {
-                    return `No more than 5 images allowed`;
-                }
-                return 'Invalid number of images';
+                if (props.value.length === 0) return "Product images are required";
+                if (props.value.length < 2) return "At least 2 images are required";
+                if (props.value.length > 5) return "No more than 5 images allowed";
+                return "Invalid number of images";
             }
         }
     },
